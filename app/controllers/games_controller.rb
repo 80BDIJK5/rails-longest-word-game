@@ -8,25 +8,25 @@ class GamesController < ApplicationController
 
   def score
     @word = params[:word]
-    # @included = params[:word].chars.all? { |letter| params[:word].count(letter) <= params[:letter].count(letter) }
-    # @message = ''
+    @included = @word.chars.all? { |letter| @word.count(letter) <= @letters.count(letter) }
+    @message = ''
 
-    # def english_word?(word)
-    #   response = URI.open("https://wagon-dictionary.herokuapp.com/#{word}")
-    #   json = JSON.parse(response.read)
-    #     return json['found']
-    # end
+    if @included
+      if @english_word
+        @message = 'Well done'
+      else
+        @message = 'Not an english word'
+      end
+    else
+      @message = 'Not in the grid'
+    end
+  end
 
-    # if @included
-    #   if @english_word
-    #     @message = 'Well done'
-    #   else
-    #     @message = 'Not an english word'
-    #   end
-    # else
-    #   @message = 'Not in the grid'
-    # end
+  private
+
+  def english_word?
+    response = URI.open("https://wagon-dictionary.herokuapp.com/#{@word}")
+    json = JSON.parse(response.read)
+    json['found']
   end
 end
-
-
